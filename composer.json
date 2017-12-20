@@ -1,0 +1,55 @@
+{
+    "name": "bentools/bl4cklist-ch3ck3r",
+    "description": "",
+    "keywords": [],
+    "authors": [
+        {
+            "name": "Beno!t POLASZEK",
+            "email": "bpolaszek@gmail.com",
+            "homepage": "http://www.polaszek.fr",
+            "role": "Developer"
+        }
+    ],
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": ">=7.1",
+        "bentools/flatten-iterator": "^1.0",
+        "bentools/hostname-extractor": "^1.0",
+        "bentools/iterable-functions": "^1.1",
+        "bentools/querystring": "^1.0",
+        "bentools/uri-factory": "^1.1",
+        "psr/http-message": "^1.0",
+        "psr/simple-cache": "^1.0"
+    },
+    "require-dev": {
+        "bentools/cartesian-product": "^1.2",
+        "bentools/simple-dbal": "^0.5.0",
+        "bentools/where": "^1.1",
+        "phpunit/phpunit": "@stable",
+        "symfony/cache": "^4.0",
+        "symfony/var-dumper": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BenTools\\Bl4cklistCh3ck3r\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BenTools\\Bl4cklistCh3ck3r\\Tests\\": "tests",
+            "App\\": "app"
+        },
+        "files": [
+            "vendor/symfony/var-dumper/Resources/functions/dump.php"
+        ]
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

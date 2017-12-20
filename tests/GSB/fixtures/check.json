@@ -1,0 +1,365 @@
+{
+  "matches": [
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threat": {
+        "hash": "771MOrRPMn6xPKlCrXx/CrR+wmCk0LgFFoSgGy7zUiA="
+      },
+      "threatEntryMetadata": {},
+      "cacheDuration": "300s",
+      "threatEntryType": "URL"
+    }
+  ],
+  "negativeCacheDuration": "300s"
+}

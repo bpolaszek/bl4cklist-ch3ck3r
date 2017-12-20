@@ -1,0 +1,129 @@
+{
+  "threatLists": [
+    {
+      "threatType": "MALWARE",
+      "platformType": "ANY_PLATFORM",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "WINDOWS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "LINUX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "OSX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "ALL_PLATFORMS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "CHROME",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ANY_PLATFORM",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "WINDOWS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "LINUX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "OSX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "ALL_PLATFORMS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "SOCIAL_ENGINEERING",
+      "platformType": "CHROME",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "POTENTIALLY_HARMFUL_APPLICATION",
+      "platformType": "ANDROID",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "IOS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "POTENTIALLY_HARMFUL_APPLICATION",
+      "platformType": "IOS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "ANY_PLATFORM",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "WINDOWS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "LINUX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "OSX",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "ALL_PLATFORMS",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "CHROME",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "UNWANTED_SOFTWARE",
+      "platformType": "ANDROID",
+      "threatEntryType": "URL"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "WINDOWS",
+      "threatEntryType": "IP_RANGE"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "LINUX",
+      "threatEntryType": "IP_RANGE"
+    },
+    {
+      "threatType": "MALWARE",
+      "platformType": "OSX",
+      "threatEntryType": "IP_RANGE"
+    }
+  ]
+}
