@@ -22,4 +22,12 @@ class NullThrottleStorage implements ThrottleStorageInterface
     {
         return;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function clearRemainingDuration(): void
+    {
+        return;
+    }
 }

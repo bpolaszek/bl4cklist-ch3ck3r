@@ -19,4 +19,9 @@ interface ThrottleStorageInterface
      * @param int $duration
      */
     public function setRemainingDuration(int $duration): void;
+
+    /**
+     * Clear the remaining wait duration.
+     */
+    public function clearRemainingDuration(): void;
 }

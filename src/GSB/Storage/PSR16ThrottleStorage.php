@@ -37,6 +37,14 @@ class PSR16ThrottleStorage implements ThrottleStorageInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function clearRemainingDuration(): void
+    {
+        $this->cache->delete($this->getKey());
+    }
+
+    /**
      * @return string
      */
     private function getKey(): string

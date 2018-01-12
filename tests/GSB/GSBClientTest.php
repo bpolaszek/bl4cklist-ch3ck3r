@@ -117,24 +117,7 @@ class GSBClientTest extends TestCase
     {
         $hashStorage = $this->getHashStorage();
         $stateStorage = $this->getStateStorage();
-        $throttleStorage = new class implements ThrottleStorageInterface
-        {
-            /**
-             * @inheritDoc
-             */
-            public function getRemainingDuration(): int
-            {
-                return 0;
-            }
-
-            /**
-             * @inheritDoc
-             */
-            public function setRemainingDuration(int $duration): void
-            {
-            }
-
-        };
+        $throttleStorage = new NullThrottleStorage();
 
         $gsb = new GSBClient($this->mockGuzzleClient(...[
             new Response(200, [], file_get_contents(__DIR__ . '/fixtures/threatLists.json')),
