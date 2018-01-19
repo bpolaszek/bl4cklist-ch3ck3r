@@ -1,6 +1,6 @@
 <?php
 
-namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage;
+namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\State;
 
 interface StateStorageInterface
 {

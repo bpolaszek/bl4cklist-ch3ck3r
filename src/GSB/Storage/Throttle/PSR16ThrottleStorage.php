@@ -1,7 +1,8 @@
 <?php
 
-namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage;
+namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Throttle;
 
+use BenTools\Bl4cklistCh3ck3r\GSB\Storage\Throttle\ThrottleStorageInterface;
 use Psr\SimpleCache\CacheInterface;
 
 class PSR16ThrottleStorage implements ThrottleStorageInterface

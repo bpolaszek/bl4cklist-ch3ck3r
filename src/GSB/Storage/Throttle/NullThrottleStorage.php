@@ -1,8 +1,6 @@
 <?php
 
-namespace BenTools\Bl4cklistCh3ck3r\Tests\GSB\Storage;
-
-use BenTools\Bl4cklistCh3ck3r\GSB\Storage\ThrottleStorageInterface;
+namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Throttle;
 
 class NullThrottleStorage implements ThrottleStorageInterface
 {

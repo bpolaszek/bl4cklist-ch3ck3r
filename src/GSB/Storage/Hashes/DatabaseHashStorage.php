@@ -1,6 +1,6 @@
 <?php
 
-namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage;
+namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes;
 
 use BenTools\Bl4cklistCh3ck3r\GSB\Model\Hash;
 use BenTools\SimpleDBAL\Contract\AdapterInterface;
@@ -72,13 +72,12 @@ class DatabaseHashStorage implements HashStorageInterface
      */
     public function getCheckSum(string $threatType, string $threatEntryType, string $platformType): Hash
     {
-        $select = select('hashSha256')->from($this->table)
-            ->where('threatType = ?', $threatType)
-            ->andWhere('threatEntryType = ?', $threatEntryType)
-            ->andWhere('platformType = ?', $platformType)
-            ->orderBy('hashIndex ASC');
-        $result = $this->connection->execute((string) $select, $select->getValues());
-        $megaHash = implode('', $result->asList());
+        $megaHash = '';
+        /** @var Hash[] $hashes */
+        $hashes = $this->getHashes($threatType, $threatEntryType, $platformType);
+        foreach ($hashes as $hash) {
+            $megaHash .= $hash->toSha256();
+        }
         return Hash::fromSha256($megaHash)->getChecksum();
     }
 
@@ -101,7 +100,6 @@ class DatabaseHashStorage implements HashStorageInterface
                 'platformType'    => $platformType,
                 'hashIndex'       => $h,
                 'hashBase64'      => $hash->toBase64(),
-                'hashSha256'      => $hash->toSha256(),
                 'prefixSize'      => mb_strlen($hash->toSha256()) / 2,
             ];
         }
@@ -112,7 +110,6 @@ class DatabaseHashStorage implements HashStorageInterface
             'platformType',
             'hashIndex',
             'hashBase64',
-            'hashSha256',
             'prefixSize',
         ]);
 
@@ -151,7 +148,6 @@ CREATE TABLE `{$this->table}` (
   `platformType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `hashIndex` int(10) unsigned NOT NULL,
   `hashBase64` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hashSha256` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `prefixSize` smallint(5) unsigned NOT NULL,
   KEY `threatType` (`threatType`,`threatEntryType`,`platformType`),
   KEY `hashIndex` (`hashIndex`)

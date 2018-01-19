@@ -1,8 +1,9 @@
 <?php
 
-namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage;
+namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes;
 
 use BenTools\Bl4cklistCh3ck3r\GSB\Model\Hash;
+use BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes\HashStorageInterface;
 use Psr\SimpleCache\CacheInterface;
 use function BenTools\FlattenIterator\flatten;
 
