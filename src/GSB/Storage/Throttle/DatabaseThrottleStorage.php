@@ -50,8 +50,8 @@ class DatabaseThrottleStorage implements ThrottleStorageInterface
     public function setRemainingDuration(int $duration): void
     {
         $this->clearRemainingDuration();
-        $insert = insert(['waitUntil' => new \DateTime(sprintf('+ %ds', $duration))]);
-        $this->connection->execute((string) $insert);
+        $insert = insert(['waitUntil' => new \DateTime(sprintf('+%d seconds', $duration))])->into($this->table);
+        $this->connection->execute((string) $insert, $insert->getValues());
     }
 
     /**

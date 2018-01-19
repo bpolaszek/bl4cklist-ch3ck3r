@@ -16,8 +16,31 @@ final class Hash implements Serializable
      */
     private $base64;
 
+    /**
+     * @var self
+     */
+    private static $prototype;
+
     private function __construct()
     {
+        self::$prototype = $this;
+    }
+
+    public function __clone()
+    {
+        $this->sha256 = null;
+        $this->base64 = null;
+    }
+
+    /**
+     * @return Hash
+     */
+    private static function new(): self
+    {
+        if (isset(self::$prototype)) {
+            return clone self::$prototype;
+        }
+        return new self;
     }
 
     /**
@@ -78,21 +101,21 @@ final class Hash implements Serializable
     }
 
     /**
-     * @inheritDoc
-     */
-    public function getFullHash(): Hash
-    {
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
+     * @param int $prefixSize
+     * @return Hash[]
      */
     public function getSplitHashes(int $prefixSize): iterable
     {
-        return array_map(function (string $hash) {
+        $sha256 = $this->toSha256();
+        $length = strlen($sha256);
+        $realSize = $prefixSize * 2;
+        for ($i = 0; $i < $length; $i += $realSize) {
+            yield Hash::fromSha256(substr($sha256, $i, $realSize));
+        }
+
+        /*return array_map(function (string $hash) {
             return Hash::fromSha256($hash);
-        }, str_split($this->toSha256(), $prefixSize * 2));
+        }, str_split($this->toSha256(), $prefixSize * 2));*/
     }
 
     /**
@@ -109,7 +132,7 @@ final class Hash implements Serializable
      */
     public static function fromSha256(string $input): self
     {
-        $hash = new self;
+        $hash = self::new();
         $hash->sha256 = $input;
         return $hash;
     }
@@ -120,7 +143,7 @@ final class Hash implements Serializable
      */
     public static function fromBase64(string $input): self
     {
-        $hash = new self;
+        $hash = self::new();
         $hash->base64 = $input;
         return $hash;
     }

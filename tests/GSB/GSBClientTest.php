@@ -57,7 +57,35 @@ class GSBClientTest extends TestCase
     {
         $hashStorage = $this->getHashStorage();
         $stateStorage = $this->getStateStorage();
-        $throttleStorage = $this->getThrottleStorage();
+        $throttleStorage = new class implements ThrottleStorageInterface
+        {
+            private $storage;
+
+            /**
+             * @inheritDoc
+             */
+            public function getRemainingDuration(): int
+            {
+                return $this->storage ?? 0;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function setRemainingDuration(int $duration): void
+            {
+                $this->storage = $duration;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function clearRemainingDuration(): void
+            {
+                $this->storage = null;
+            }
+
+        };
 
         $gsb = new GSBClient($this->mockGuzzleClient(...[
             new Response(200, [], file_get_contents(__DIR__ . '/fixtures/threatLists.json')),
@@ -66,6 +94,7 @@ class GSBClientTest extends TestCase
 
         $threatLists = $gsb->getThreatLists();
         $gsb->updateDatabase($hashStorage, $stateStorage, $throttleStorage, ...$threatLists);
+        $this->assertGreaterThan(0, $throttleStorage->getRemainingDuration());
 
         $this->assertEquals('Cg0IARAGGAEiAzAwMTABELS4AxoCGAPfpZUX', $stateStorage->getState('MALWARE', 'URL', 'ANY_PLATFORM'));
         $this->assertEquals('Cg0IARAGGAEiAzAwMTABELS4AxoCGAPfpZUX', $stateStorage->getState('MALWARE', 'URL', 'WINDOWS'));
@@ -102,7 +131,34 @@ class GSBClientTest extends TestCase
 
         $hashStorage = $this->getHashStorage();
         $stateStorage = $this->getStateStorage();
-        $throttleStorage = $this->getThrottleStorage();
+        $throttleStorage = new class implements ThrottleStorageInterface
+        {
+
+            /**
+             * @inheritDoc
+             */
+            public function getRemainingDuration(): int
+            {
+                return 10;
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function setRemainingDuration(int $duration): void
+            {
+
+            }
+
+            /**
+             * @inheritDoc
+             */
+            public function clearRemainingDuration(): void
+            {
+
+            }
+
+        };
 
         $gsb = new GSBClient($this->mockGuzzleClient(...[
             new Response(200, [], file_get_contents(__DIR__ . '/fixtures/threatLists.json')),
@@ -240,7 +296,7 @@ class GSBClientTest extends TestCase
     protected function getHashStorage(): HashStorageInterface
     {
         if (null === self::$hashStorage) {
-            self::$hashStorage = new PSR16HashStorage(new ArrayCache());
+            self::$hashStorage = new PSR16HashStorage(new ArrayCache(0, false));
         }
         return self::$hashStorage;
     }
@@ -251,20 +307,10 @@ class GSBClientTest extends TestCase
     protected function getStateStorage(): StateStorageInterface
     {
         if (null === self::$stateStorage) {
-            self::$stateStorage = new PSR16StateStorage(new ArrayCache());
+            self::$stateStorage = new PSR16StateStorage(new ArrayCache(0, false));
         }
         return self::$stateStorage;
     }
 
-    /**
-     * @return ThrottleStorageInterface
-     */
-    protected function getThrottleStorage(): ThrottleStorageInterface
-    {
-        if (null === self::$throttleStorage) {
-            self::$throttleStorage = new PSR16ThrottleStorage(new ArrayCache());
-        }
-        return self::$throttleStorage;
-    }
 
 }
