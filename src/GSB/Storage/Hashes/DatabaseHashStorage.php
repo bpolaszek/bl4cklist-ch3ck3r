@@ -5,8 +5,10 @@ namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes;
 use BenTools\Bl4cklistCh3ck3r\GSB\Model\Hash;
 use BenTools\SimpleDBAL\Contract\AdapterInterface;
 use function BenTools\Where\delete;
+use function BenTools\Where\field;
 use function BenTools\Where\insert;
 use function BenTools\Where\select;
+use function BenTools\Where\update;
 
 class DatabaseHashStorage implements HashStorageInterface
 {
@@ -56,14 +58,14 @@ class DatabaseHashStorage implements HashStorageInterface
      */
     public function getHashes(string $threatType, string $threatEntryType, string $platformType): iterable
     {
-        $select = select('hashBase64')->from($this->table)
+        $select = select('hashSha256')->from($this->table)
             ->where('threatType = ?', $threatType)
             ->andWhere('threatEntryType = ?', $threatEntryType)
             ->andWhere('platformType = ?', $platformType)
             ->orderBy('hashIndex ASC');
         $result = $this->connection->execute((string) $select, $select->getValues());
         foreach ($result as $item) {
-            yield Hash::fromBase64($item['hashBase64']);
+            yield Hash::fromSha256($item['hashSha256']);
         }
     }
 
@@ -84,41 +86,94 @@ class DatabaseHashStorage implements HashStorageInterface
     /**
      * @inheritDoc
      */
-    public function storeHashes(string $threatType, string $threatEntryType, string $platformType, array $hashes): void
+    public function beginTransaction(): void
+    {
+        $this->connection->getWrappedConnection()->beginTransaction();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clearHashes(string $threatType, string $threatEntryType, string $platformType): void
     {
         $delete = delete()->from($this->table)
             ->where('threatType = ?', $threatType)
             ->andWhere('threatEntryType = ?', $threatEntryType)
             ->andWhere('platformType = ?', $platformType);
+        $this->connection->execute((string) $delete, $delete->getValues());
+    }
 
-        $items = [];
-        /** @var Hash[] $hashes */
-        foreach ($hashes as $h => $hash) {
-            $items[] = [
-                'threatType'      => $threatType,
-                'threatEntryType' => $threatEntryType,
-                'platformType'    => $platformType,
-                'hashIndex'       => $h,
-                'hashBase64'      => $hash->toBase64(),
-                'prefixSize'      => mb_strlen($hash->toSha256()) / 2,
-            ];
+    /**
+     * @inheritDoc
+     */
+    public function storeHashes(string $threatType, string $threatEntryType, string $platformType, array $additions, array $removals): void
+    {
+        $wasEmpty = $this->isDatabaseEmpty($threatType, $threatEntryType, $platformType);
+        $chunks = array_chunk($removals, 1000);
+        foreach ($chunks as $chunk) {
+            $delete = delete()->from($this->table)
+                ->where('threatType = ?', $threatType)
+                ->andWhere('threatEntryType = ?', $threatEntryType)
+                ->andWhere('platformType = ?', $platformType)
+                ->andWhere(field('hashIndex')->in($chunk))
+            ;
+            $this->connection->execute((string) $delete, $delete->getValues());
         }
 
-        $insert = insert(...$items)->into($this->table, ...[
-            'threatType',
-            'threatEntryType',
-            'platformType',
-            'hashIndex',
-            'hashBase64',
-            'prefixSize',
-        ]);
+        $chunks = array_chunk($additions, $this->buffer, true);
 
-        $this->connection->execute((string) $delete, $delete->getValues());
-
-        foreach ($insert->split($this->buffer) as $insert) {
+        foreach ($chunks as $chunk) {
+            $items = [];
+            foreach ($chunk as $h => $hash) {
+                $items[] = [
+                    'threatType'      => $threatType,
+                    'threatEntryType' => $threatEntryType,
+                    'platformType'    => $platformType,
+                    'hashIndex'       => $h,
+                    'hashSha256'      => $hash->toSha256(),
+                    'prefixSize'      => mb_strlen($hash->toSha256()) / 2,
+                ];
+            }
+            $insert = insert(...$items)->into($this->table, ...[
+                'threatType',
+                'threatEntryType',
+                'platformType',
+                'hashIndex',
+                'hashSha256',
+                'prefixSize',
+            ]);
             $this->connection->execute((string) $insert, $insert->getValues());
         }
 
+        if (!$wasEmpty) {
+            $this->reorderHashes($threatType, $threatEntryType, $platformType);
+        }
+    }
+
+    /**
+     * @param string $threatType
+     * @param string $threatEntryType
+     * @param string $platformType
+     * @throws \InvalidArgumentException
+     */
+    private function reorderHashes(string $threatType, string $threatEntryType, string $platformType): void
+    {
+        $this->connection->execute("SELECT @hashIndex := -1");
+        $update = update($this->table)
+            ->set('hashIndex = (select @hashIndex := @hashIndex + 1)')
+            ->where('threatType = ?', $threatType)
+            ->andWhere('threatEntryType = ?', $threatEntryType)
+            ->andWhere('platformType = ?', $platformType)
+            ->orderBy('hashSha256');
+        $this->connection->execute((string) $update, $update->getValues());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function commit(): void
+    {
+        $this->connection->getWrappedConnection()->commit();
     }
 
     /**
@@ -130,10 +185,29 @@ class DatabaseHashStorage implements HashStorageInterface
             ->where('threatType = ?', $threatType)
             ->andWhere('threatEntryType = ?', $threatEntryType)
             ->andWhere('platformType = ?', $platformType)
-            ->andWhere('hashBase64 = ?', $hash->toBase64())
+            ->andWhere('hashSha256 = ?', $hash->toSha256())
             ->limit(1)
         ;
+        //dump($this->connection->prepare((string) $select, $select->getValues())->preview());
         return 1 === count($this->connection->execute((string) $select, $select->getValues()));
+    }
+
+    /**
+     * @param string $threatType
+     * @param string $threatEntryType
+     * @param string $platformType
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    private function isDatabaseEmpty(string $threatType, string $threatEntryType, string $platformType): bool
+    {
+        $select = select('1')->from($this->table)
+            ->where('threatType = ?', $threatType)
+            ->andWhere('threatEntryType = ?', $threatEntryType)
+            ->andWhere('platformType = ?', $platformType)
+            ->limit(1)
+            ;
+        return 0 === count($this->connection->execute((string) $select, $select->getValues()));
     }
 
     /**
@@ -146,13 +220,14 @@ CREATE TABLE `{$this->table}` (
   `threatType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `threatEntryType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `platformType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hashIndex` int(10) unsigned NOT NULL,
-  `hashBase64` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `prefixSize` smallint(5) unsigned NOT NULL,
+  `hashIndex` int(10) UNSIGNED NOT NULL,
+  `hashBase64` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hashSha256` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prefixSize` smallint(5) UNSIGNED NOT NULL,
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
   KEY `threatType` (`threatType`,`threatEntryType`,`platformType`),
   KEY `hashIndex` (`hashIndex`)
 );
 SQL;
-
     }
 }

@@ -112,10 +112,6 @@ final class Hash implements Serializable
         for ($i = 0; $i < $length; $i += $realSize) {
             yield Hash::fromSha256(substr($sha256, $i, $realSize));
         }
-
-        /*return array_map(function (string $hash) {
-            return Hash::fromSha256($hash);
-        }, str_split($this->toSha256(), $prefixSize * 2));*/
     }
 
     /**
@@ -171,13 +167,13 @@ final class Hash implements Serializable
     }
 
     /**
-     * @param array $hashes
+     * @param array $rawHashes
      * @return array
      */
-    public static function sort(array &$hashes)
+    public static function sort(array &$rawHashes)
     {
-        sort($hashes, SORT_STRING);
-        return $hashes;
+        sort($rawHashes, SORT_STRING);
+        return $rawHashes;
     }
 
     /**

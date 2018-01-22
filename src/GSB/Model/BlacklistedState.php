@@ -12,7 +12,7 @@ class BlacklistedState
     /**
      * @var Hash
      */
-    private $fullhash;
+    private $hash;
 
     /**
      * @var int
@@ -44,7 +44,7 @@ class BlacklistedState
     public function __construct(string $expression, Hash $fullhash, int $length, ThreatList $threatList)
     {
         $this->expression = $expression;
-        $this->fullhash = $fullhash;
+        $this->hash = $fullhash;
         $this->length = $length;
         $this->threatList = $threatList;
     }
@@ -100,9 +100,9 @@ class BlacklistedState
     /**
      * @return Hash
      */
-    public function getFullhash(): Hash
+    public function getHash(): Hash
     {
-        return $this->fullhash;
+        return $this->hash;
     }
 
     /**

@@ -122,47 +122,35 @@ class GSBClient
             return $json['listUpdateResponses'] ?? [];
         })->wait();
 
-        foreach ($updates as $update) {
-            if ('FULL_UPDATE' === $update['responseType']) {
-                $additions = $update['additions'];
-                $addition = array_shift($additions);
-                $hashCollection = Hash::fromBase64($addition['rawHashes']['rawHashes']);
-                $hashes = iterable_to_array($hashCollection->getSplitHashes($addition['rawHashes']['prefixSize']));
-                $hashStorage->storeHashes($update['threatType'], $update['threatEntryType'], $update['platformType'], $hashes);
-                $checksum = $hashStorage->getCheckSum($update['threatType'], $update['threatEntryType'], $update['platformType'])->toBase64();
+        foreach ($updates as $u => $update) {
+            $threatType = $update['threatType'];
+            $threatEntryType = $update['threatEntryType'];
+            $platformType = $update['platformType'];
+            $newClientState = $update['newClientState'];
+            $checksum = $update['checksum']['sha256'];
+            $isFullUpdate = 'FULL_UPDATE' === $update['responseType'];
+            $removals = $update['removals'][0]['rawIndices']['indices'] ?? [];
+            $additions = [];
 
-                if ($checksum !== $update['checksum']['sha256']) {
-                    throw new ThreatListUpdateException(new ThreatList($update['threatType'], $update['threatEntryType'], $update['platformType']));
-                }
+            $hashStorage->beginTransaction();
 
-                $stateStorage->setState($update['threatType'], $update['threatEntryType'], $update['platformType'], $update['newClientState']);
-            } else {
-                $hashes = iterable_to_array($hashStorage->getHashes($update['threatType'], $update['threatEntryType'], $update['platformType']));
-
-                // Removals first
-                foreach ($update['removals'] ?? [] as $removal) {
-                    foreach ($removal['rawIndices']['indices'] as $index) {
-                        unset($hashes[$index]);
-                    }
-                }
-
-                // Additions
-                foreach ($update['additions'] ?? [] as $addition) {
-                    $hashCollection = Hash::fromBase64($addition['rawHashes']['rawHashes']);
-                    $newHashes = iterable_to_array($hashCollection->getSplitHashes($addition['rawHashes']['prefixSize']));
-                    $hashes = array_merge($hashes, $newHashes);
-                }
-
-                Hash::sort($hashes);
-                $hashStorage->storeHashes($update['threatType'], $update['threatEntryType'], $update['platformType'], $hashes);
-                $checksum = $hashStorage->getCheckSum($update['threatType'], $update['threatEntryType'], $update['platformType'])->toBase64();
-
-                if ($checksum !== $update['checksum']['sha256']) {
-                    throw new ThreatListUpdateException(new ThreatList($update['threatType'], $update['threatEntryType'], $update['platformType']));
-                }
-
-                $stateStorage->setState($update['threatType'], $update['threatEntryType'], $update['platformType'], $update['newClientState']);
+            if ($isFullUpdate) {
+                $hashStorage->clearHashes($threatType, $threatEntryType, $platformType);
             }
+
+            foreach ($update['additions'] ?? [] as $addition) {
+                $additions = array_merge($additions, iterable_to_array(Hash::fromBase64($addition['rawHashes']['rawHashes'])->getSplitHashes($addition['rawHashes']['prefixSize'])));
+            }
+
+            $hashStorage->storeHashes($threatType, $threatEntryType, $platformType, $additions, $removals);
+            $hashStorage->commit();
+
+            // Verify checksum
+            if ($checksum !== $hashStorage->getCheckSum($threatType, $threatEntryType, $platformType)->toBase64()) {
+                throw new ThreatListUpdateException(new ThreatList($threatType, $threatEntryType, $platformType));
+            }
+
+            $stateStorage->setState($threatType, $threatEntryType, $platformType, $newClientState);
         }
     }
 
@@ -202,7 +190,7 @@ class GSBClient
         foreach ($checkList as $expression => $states) {
             foreach ($states as $state) {
                 $threatList = $state->getThreatList();
-                $hash = $state->getFullhash();
+                $hash = $state->getHash();
                 if ($hashStorage->containsHash($threatList->getThreatType(), $threatList->getThreatEntryType(), $threatList->getPlatformType(), $hash->shorten($state->getLength() * 2))) {
                     $state->setShouldBeChecked(true);
                 }
@@ -247,7 +235,7 @@ class GSBClient
         }
 
         $threatEntries = array_map(function (BlacklistedState $state) {
-            return $state->shouldBeChecked() ? ['hash' => $state->getFullhash()->shorten($state->getLength() * 2)->toBase64()] : null;
+            return $state->shouldBeChecked() ? ['hash' => $state->getHash()->shorten($state->getLength() * 2)->toBase64()] : null;
         }, flatten($checkList)->asArray());
         $threatEntries = array_values(array_unique(array_filter($threatEntries)));
 
@@ -279,7 +267,7 @@ class GSBClient
 
             foreach ($checkList as $states) {
                 foreach ($states as $state) {
-                    if ($fullHash->toBase64() === $state->getFullhash()->toBase64()
+                    if ($fullHash->toBase64() === $state->getHash()->toBase64()
                         && $match['threatType'] === $state->getThreatList()->getThreatType()
                         && $match['threatEntryType'] === $state->getThreatList()->getThreatEntryType()
                         && $match['platformType'] === $state->getThreatList()->getPlatformType()) {

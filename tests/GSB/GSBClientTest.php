@@ -30,7 +30,6 @@ class GSBClientTest extends TestCase
 
     private static $hashStorage;
     private static $stateStorage;
-    private static $throttleStorage;
 
     public function testAuthentication()
     {
@@ -287,8 +286,6 @@ class GSBClientTest extends TestCase
         $stack->setHandler(new MockHandler($responses));
         return new Client(['handler' => $stack]);
     }
-
-
 
     /**
      * @return HashStorageInterface

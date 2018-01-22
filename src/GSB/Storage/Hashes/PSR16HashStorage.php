@@ -29,8 +29,10 @@ class PSR16HashStorage implements HashStorageInterface
     public function getPrefixSizes(string $threatType, string $threatEntryType, string $platformType): array
     {
         $key = $this->getKey($threatType, $threatEntryType, $platformType);
-        $storage = $this->cache->get($key) ?? [];
-        $sizes = array_keys($storage);
+        $rawHashes = $this->cache->get($key) ?? [];
+        $sizes = array_unique(array_map(function (string $sha256) {
+            return strlen($sha256) / 2;
+        }, $rawHashes));
         sort($sizes, SORT_NUMERIC);
         return $sizes;
     }
@@ -41,9 +43,9 @@ class PSR16HashStorage implements HashStorageInterface
     public function getHashes(string $threatType, string $threatEntryType, string $platformType): iterable
     {
         $key = $this->getKey($threatType, $threatEntryType, $platformType);
-        $storage = $this->cache->get($key) ?? [];
-        foreach (flatten($storage) as $sha256) {
-            yield Hash::fromSha256($sha256);
+        $rawHashes = $this->cache->get($key) ?? [];
+        foreach ($rawHashes as $string) {
+            yield Hash::fromSha256($string);
         }
     }
 
@@ -60,15 +62,49 @@ class PSR16HashStorage implements HashStorageInterface
     /**
      * @inheritDoc
      */
-    public function storeHashes(string $threatType, string $threatEntryType, string $platformType, array $hashes): void
+    public function beginTransaction(): void
+    {
+        return;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function clearHashes(string $threatType, string $threatEntryType, string $platformType): void
     {
         $key = $this->getKey($threatType, $threatEntryType, $platformType);
-        $storage = [];
-        foreach ($hashes as $hash) {
-            $length = mb_strlen((string) $hash) / 2;
-            $storage[$length][] = (string) $hash;
+        $this->cache->delete($key);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function storeHashes(string $threatType, string $threatEntryType, string $platformType, array $additions, array $removals): void
+    {
+        $key = $this->getKey($threatType, $threatEntryType, $platformType);
+        $rawHashes = $this->cache->get($key) ?? [];
+
+        // Process removals first
+        foreach ($removals as $index) {
+            unset($rawHashes[$index]);
         }
-        $this->cache->set($key, $storage);
+
+        // Then, process additions
+        foreach ($additions as $hash) {
+            $rawHashes[] = $hash->toSha256();
+        }
+
+        Hash::sort($rawHashes);
+        $this->cache->set($key, $rawHashes);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function commit(): void
+    {
+        return;
     }
 
     /**
@@ -76,12 +112,9 @@ class PSR16HashStorage implements HashStorageInterface
      */
     public function containsHash(string $threatType, string $threatEntryType, string $platformType, Hash $hash): bool
     {
-        foreach ($this->getHashes($threatType, $threatEntryType, $platformType) as $_hash) {
-            if ($hash->toSha256() === $_hash->toSha256()) {
-                return true;
-            }
-        }
-        return false;
+        $key = $this->getKey($threatType, $threatEntryType, $platformType);
+        $storage = $this->cache->get($key) ?? [];
+        return in_array($hash->toSha256(), $storage);
     }
 
 

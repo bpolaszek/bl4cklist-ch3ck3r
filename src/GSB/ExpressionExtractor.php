@@ -57,7 +57,8 @@ final class ExpressionExtractor
                 $subDomainParts = array_slice(explode('.', $domain->getSubdomain()), -5, 5);
                 array_shift($subDomainParts);
 
-                $expressions = $generator($hostnameExtractor,
+                $expressions = $generator(
+                    $hostnameExtractor,
                     $uri->withHost(
                         implode('.', array_filter([
                             implode('.', $subDomainParts),
