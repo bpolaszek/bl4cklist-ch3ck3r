@@ -73,4 +73,20 @@ class DatabaseStateStorage implements StateStorageInterface
         $select = select('state')->from($this->table);
         return $this->connection->execute((string) $select, $select->getValues())->asList();
     }
+
+    /**
+     * @return string
+     */
+    public function getCreateTableQuery(): string
+    {
+        return <<<SQL
+CREATE TABLE `{$this->table}` (
+  `threatType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `threatEntryType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `platformType` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  KEY `threatType` (`threatType`,`threatEntryType`,`platformType`)
+);
+SQL;
+    }
 }
