@@ -22,6 +22,8 @@ class MemSQLJSONHashStorage implements HashStorageInterface, StateStorageInterfa
      */
     private $table;
 
+    private $localStorage = [];
+
 
     /**
      * DatabaseJSONHashStorage constructor.
@@ -156,8 +158,12 @@ class MemSQLJSONHashStorage implements HashStorageInterface, StateStorageInterfa
     /**
      * @inheritDoc
      */
-    public function containsHash(string $threatType, string $threatEntryType, string $platformType, Hash $hash): bool
+    public function containsHash(string $threatType, string $threatEntryType, string $platformType, Hash $hash, bool $useLocalStorage = false): bool
     {
+        if (true === $useLocalStorage) {
+            return $this->containsHashInLocalStorage($threatType, $threatEntryType, $platformType, $hash);
+        }
+
         $select = select('1')->from($this->table)
             ->where('threatType = ?', $threatType)
             ->andWhere('threatEntryType = ?', $threatEntryType)
@@ -165,6 +171,23 @@ class MemSQLJSONHashStorage implements HashStorageInterface, StateStorageInterfa
             ->andWhere('JSON_ARRAY_CONTAINS_STRING(hashesSha256, ?)', $hash->toSha256())
             ->limit(1);
         return 1 === count($this->connection->execute((string) $select, $select->getValues()));
+    }
+
+    /**
+     * @param string $threatType
+     * @param string $threatEntryType
+     * @param string $platformType
+     * @param Hash   $hash
+     * @return bool
+     * @throws \InvalidArgumentException
+     */
+    private function containsHashInLocalStorage(string $threatType, string $threatEntryType, string $platformType, Hash $hash): bool
+    {
+        if (isset($this->localStorage[$threatType][$threatEntryType][$platformType])) {
+            return in_array($hash->toSha256(), $this->localStorage[$threatType][$threatEntryType][$platformType]);
+        }
+        $this->localStorage[$threatType][$threatEntryType][$platformType] = $this->getRawhashes($threatType, $threatEntryType, $platformType);
+        return $this->containsHashInLocalStorage($threatType, $threatEntryType, $platformType, $hash);
     }
 
     /**

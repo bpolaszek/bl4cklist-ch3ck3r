@@ -4,11 +4,13 @@ namespace BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes;
 
 use BenTools\Bl4cklistCh3ck3r\GSB\Model\Hash;
 use BenTools\SimpleDBAL\Contract\AdapterInterface;
+use BenTools\SimpleDBAL\Model\Adapter\Mysqli\MysqliAdapter;
 use function BenTools\Where\delete;
 use function BenTools\Where\field;
 use function BenTools\Where\insert;
 use function BenTools\Where\select;
 use function BenTools\Where\update;
+use Symfony\Component\Cache\Adapter\PdoAdapter;
 
 class DatabaseHashStorage implements HashStorageInterface
 {
@@ -29,7 +31,7 @@ class DatabaseHashStorage implements HashStorageInterface
 
     /**
      * DatabaseHashStorage constructor.
-     * @param AdapterInterface $connection
+     * @param AdapterInterface|MysqliAdapter|PdoAdapter $connection
      * @param string           $table
      * @param int              $buffer
      */
@@ -88,7 +90,7 @@ class DatabaseHashStorage implements HashStorageInterface
      */
     public function beginTransaction(): void
     {
-        $this->connection->getWrappedConnection()->beginTransaction();
+        $this->connection->beginTransaction();
     }
 
     /**
@@ -173,7 +175,7 @@ class DatabaseHashStorage implements HashStorageInterface
      */
     public function commit(): void
     {
-        $this->connection->getWrappedConnection()->commit();
+        $this->connection->commit();
     }
 
     /**
