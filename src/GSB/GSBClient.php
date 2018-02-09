@@ -235,9 +235,12 @@ class GSBClient
         }
 
         $threatEntries = array_map(function (BlacklistedState $state) {
-            return $state->shouldBeChecked() ? ['hash' => $state->getHash()->shorten($state->getLength() * 2)->toBase64()] : null;
+            return $state->shouldBeChecked() ? $state->getHash()->shorten($state->getLength() * 2)->toBase64() : null;
         }, flatten($checkList)->asArray());
         $threatEntries = array_values(array_unique(array_filter($threatEntries)));
+        $threatEntries = array_map(function (string $hash) {
+            return ['hash' => $hash];
+        }, $threatEntries);
 
         $request = new Request('POST', 'https://safebrowsing.googleapis.com/v4/fullHashes:find');
         $request = $request->withBody(
