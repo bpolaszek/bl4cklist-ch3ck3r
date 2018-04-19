@@ -37,8 +37,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "BenTools\\Bl4cklistCh3ck3r\\Tests\\": "tests",
-            "App\\": "app"
+            "BenTools\\Bl4cklistCh3ck3r\\Tests\\": "tests"
         },
         "files": [
             "vendor/symfony/var-dumper/Resources/functions/dump.php"

@@ -14,10 +14,10 @@ class ThreatListUpdateException extends \Exception
     /**
      * @inheritDoc
      */
-    public function __construct(ThreatList $threatList, string $message = "", int $code = 0, Throwable $previous = null)
+    public function __construct(ThreatList $threatList, string $message = null, int $code = 0, Throwable $previous = null)
     {
         $this->threatList = $threatList;
-        parent::__construct(vsprintf('Error updating threatlist %s / %s / %s', [
+        parent::__construct($message ?? vsprintf('Error updating threatlist %s / %s / %s', [
             $threatList->getThreatType(),
             $threatList->getThreatEntryType(),
             $threatList->getPlatformType(),

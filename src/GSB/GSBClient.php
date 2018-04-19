@@ -122,10 +122,16 @@ class GSBClient
             return $json['listUpdateResponses'] ?? [];
         })->wait();
 
+
         foreach ($updates as $u => $update) {
             $threatType = $update['threatType'];
             $threatEntryType = $update['threatEntryType'];
             $platformType = $update['platformType'];
+
+            if (!$this->isThreatListInThreatLists($threatType, $threatEntryType, $platformType, $threatLists)) {
+                continue;
+            }
+
             $newClientState = $update['newClientState'];
             $checksum = $update['checksum']['sha256'];
             $isFullUpdate = 'FULL_UPDATE' === $update['responseType'];
@@ -146,12 +152,30 @@ class GSBClient
             $hashStorage->commit();
 
             // Verify checksum
-            if ($checksum !== $hashStorage->getCheckSum($threatType, $threatEntryType, $platformType)->toBase64()) {
-                throw new ThreatListUpdateException(new ThreatList($threatType, $threatEntryType, $platformType));
+            $generatedChecksum = $hashStorage->getCheckSum($threatType, $threatEntryType, $platformType)->toBase64();
+            if ($checksum !== $generatedChecksum) {
+                throw new ThreatListUpdateException(new ThreatList($threatType, $threatEntryType, $platformType), sprintf('Expected checksum %s, got %s', $checksum, $generatedChecksum));
             }
 
             $stateStorage->setState($threatType, $threatEntryType, $platformType, $newClientState);
         }
+    }
+
+    /**
+     * @param string $threatType
+     * @param string $threatEntryType
+     * @param string $platformType
+     * @param ThreatList[]  $threatLists
+     * @return bool
+     */
+    private function isThreatListInThreatLists(string $threatType, string $threatEntryType, string $platformType, array $threatLists): bool
+    {
+        foreach ($threatLists as $threatList) {
+            if ($threatList->getThreatType() === $threatType && $threatList->getThreatEntryType() === $threatEntryType && $threatList->getPlatformType() === $platformType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
