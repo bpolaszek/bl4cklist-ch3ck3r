@@ -38,17 +38,15 @@ final class ContextMatcherSpec extends Specification
         $context = $this->context;
         $rule = $this->rule;
 
-        foreach (AdblockParser::BOOLEAN_CONTEXTS as $filter) {
-            if (isset($context[$filter])) {
-                $_spec = spec(($rule['options'][$filter] ?? AdblockParser::IGNORE_FILTER) === AdblockParser::APPLY_FILTER);
+        foreach ($context as $filter => $value) {
+            if (in_array($filter, AdblockParser::BOOLEAN_CONTEXTS)) {
+                $_spec = spec(($rule['options'][$filter] ?? AdblockParser::IGNORE_FILTER) === $value);
+                $spec = isset($spec) ? $spec->and($_spec) : $_spec;
+            } elseif ('domain' === $filter && isset($rule['options']['domain'][$context['domain']])) {
+                $status = $rule['options']['domain'][$context['domain']];
+                $_spec = spec(AdblockParser::APPLY_FILTER === $status);
                 $spec = isset($spec) ? $spec->and($_spec) : $_spec;
             }
-        }
-
-        if (isset($context['domain']) && isset($rule['options']['domain'][$context['domain']])) {
-            $status = $rule['options']['domain'][$context['domain']];
-            $_spec = spec(AdblockParser::APPLY_FILTER === $status);
-            $spec = isset($spec) ? $spec->and($_spec) : $_spec;
         }
 
         if (!isset($spec)) {

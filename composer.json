@@ -10,14 +10,16 @@
             "role": "Developer"
         }
     ],
+    "minimum-stability": "dev",
     "type": "library",
     "license": "proprietary",
     "require": {
         "php": ">=7.1",
         "bentools/flatten-iterator": "^1.0",
-        "bentools/hostname-extractor": "^1.1",
+        "bentools/hostname-extractor": "1.0.x-dev",
         "bentools/iterable-functions": "^1.1",
         "bentools/querystring": "^1.0",
+        "bentools/rewindable-generator": "^1.0@dev",
         "bentools/specification": "^3.0",
         "bentools/uri-factory": "^1.1",
         "danielstjules/stringy": "^3.1",

@@ -96,5 +96,4 @@ final class RuleMatcher
     {
         return (new ContextMatcherSpec($context, $rule))->isSatisfied();
     }
-
 }

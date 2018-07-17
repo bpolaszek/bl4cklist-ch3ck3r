@@ -39,19 +39,4 @@ final class AdblockListIterator
             yield $parse($line);
         }
     }
-
-    /**
-     * @param string $content
-     * @return iterable
-     */
-    public function invoke(string $content): iterable
-    {
-        $parse = $this->parser;
-        $lines = preg_split('/$\R?^/m', $content);
-        return array_map(function (string $line) use ($parse) {
-            return $parse($line);
-        }, array_filter($lines, function (string $line) {
-            return !in_array($line[0], ['[', '!']);
-        }));
-    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 namespace BenTools\Bl4cklistCh3ck3r\ABP\Parser;
+
 use function Stringy\create as s;
 
 final class AdblockParser
@@ -10,9 +11,20 @@ final class AdblockParser
     const DOMAIN_NAME = 'domain_name';
     const DOMAIN_URI = 'domain_uri';
     const ADDRESS_PARTS = 'address_parts';
-    const APPLY_FILTER = 'include';
-    const IGNORE_FILTER = 'ignore';
+    const APPLY_FILTER = true;
+    const IGNORE_FILTER = false;
     const BOOLEAN_CONTEXTS = ['script', 'image', 'stylesheet', 'object', 'object-subrequest', 'subdocument', 'third-party', 'popup', 'xmlhttprequest'];
+
+    /**
+     * @param iterable $lines
+     * @return iterable
+     */
+    public function parseMultiple(iterable $lines): iterable
+    {
+        foreach ($lines as $line) {
+            yield $this->parse($line);
+        }
+    }
 
     /**
      * @param string $line
@@ -23,12 +35,12 @@ final class AdblockParser
     {
         $rule = s($line);
         $output = [
-            'source' => $line,
-            'pattern' => $line,
-            'options' => [],
-            'exception' => false,
-            'type' => self::ADDRESS_PARTS,
-            'hostname' => null,
+            'source'      => $line,
+            'pattern'     => $line,
+            'options'     => [],
+            'exception'   => false,
+            'type'        => self::ADDRESS_PARTS,
+            'hostname'    => null,
             'request_uri' => null,
         ];
 
@@ -45,21 +57,14 @@ final class AdblockParser
             $rule = $rule->removeLeft('@@');
         }
 
-        // Exact URL match
-        if ($rule->startsWith('|') && $rule->endsWith('|')) {
+        if ($rule->startsWith('|') && $rule->endsWith('|')) { // Exact URL match
             $output['type'] = self::EXACT_MATCH;
             $rule = $rule->removeLeft('|')->removeRight('|');
-        }
-
-        // Domain match
-        if ($rule->startsWith('||') && $rule->endsWith('^')) {
+        } elseif ($rule->startsWith('||') && $rule->endsWith('^')) { // Domain match
             $output['type'] = self::DOMAIN_NAME;
             $rule = $rule->removeLeft('||')->removeRight('^');
             $output['hostname'] = (string) $rule;
-        }
-
-        // Domain + URL parts
-        if ($rule->startsWith('||')) {
+        } elseif ($rule->startsWith('||')) { // Domain + URL parts
             $output['type'] = self::DOMAIN_URI;
             $rule = $rule->removeLeft('||');
             $output['hostname'] = strstr((string) $rule, '/', true);
@@ -100,5 +105,4 @@ final class AdblockParser
     {
         return $this->parse($line);
     }
-
 }

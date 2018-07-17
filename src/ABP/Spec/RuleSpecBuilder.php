@@ -66,5 +66,4 @@ final class RuleSpecBuilder
 
         return $spec;
     }
-
 }
