@@ -10,15 +10,14 @@ use BenTools\Bl4cklistCh3ck3r\GSB\Model\ThrottleException;
 use BenTools\Bl4cklistCh3ck3r\GSB\Storage\Hashes\HashStorageInterface;
 use BenTools\Bl4cklistCh3ck3r\GSB\Storage\State\StateStorageInterface;
 use BenTools\Bl4cklistCh3ck3r\GSB\Storage\Throttle\ThrottleStorageInterface;
-use function BenTools\FlattenIterator\flatten;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use function GuzzleHttp\Psr7\str;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
+use function BenTools\FlattenIterator\flatten;
 use function BenTools\QueryString\query_string;
 use function GuzzleHttp\Psr7\stream_for;
-use Psr\Http\Message\UriInterface;
 
 class GSBClient
 {
@@ -136,7 +135,7 @@ class GSBClient
             $checksum = $update['checksum']['sha256'];
             $isFullUpdate = 'FULL_UPDATE' === $update['responseType'];
             $removals = $update['removals'][0]['rawIndices']['indices'] ?? [];
-            $additions = [];
+            $additions = [[]];
 
             $hashStorage->beginTransaction();
 
@@ -145,8 +144,10 @@ class GSBClient
             }
 
             foreach ($update['additions'] ?? [] as $addition) {
-                $additions = array_merge($additions, iterable_to_array(Hash::fromBase64($addition['rawHashes']['rawHashes'])->getSplitHashes($addition['rawHashes']['prefixSize'])));
+                $additions[] = iterable_to_array(Hash::fromBase64($addition['rawHashes']['rawHashes'])->getSplitHashes($addition['rawHashes']['prefixSize']));
             }
+
+            $additions = array_merge(...$additions);
 
             $hashStorage->storeHashes($threatType, $threatEntryType, $platformType, $additions, $removals);
             $hashStorage->commit();
